@@ -3,35 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Image Generator</title>
+  <title>CA Poster Generator</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: url('Poster.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background: #f2f2f2;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
       font-family: 'Georgia', serif;
-      color: #2c2c2c;
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.95);
+      background: white;
       padding: 30px 40px;
       border-radius: 12px;
       text-align: center;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       max-width: 400px;
-    }
-
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      font-weight: normal;
     }
 
     canvas {
@@ -46,7 +38,6 @@
       font-size: 16px;
       border-radius: 6px;
       border: 1px solid #ccc;
-      box-sizing: border-box;
     }
 
     button {
@@ -54,7 +45,6 @@
       color: white;
       border: none;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
     button:hover {
@@ -84,43 +74,49 @@
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
+      const userReader = new FileReader();
+      userReader.onload = function(ev) {
         const userImg = new Image();
         userImg.onload = function() {
           const bgImg = new Image();
-          bgImg.src = 'Poster.jpg';
-
           bgImg.onload = function() {
+            // Set canvas size to match the poster
             canvas.width = bgImg.width;
             canvas.height = bgImg.height;
+
+            // Draw the poster background
             ctx.drawImage(bgImg, 0, 0);
 
-            // Define the area where the tree was and place the uploaded image
+            // Position for user's image (adjust if needed)
             const imgWidth = 300;
             const imgHeight = 300;
             const imgX = (bgImg.width - imgWidth) / 2;
-            const imgY = bgImg.height * 0.55;
+            const imgY = bgImg.height * 0.52;
 
-            // Draw user's image
+            // Draw the uploaded photo
             ctx.drawImage(userImg, imgX, imgY, imgWidth, imgHeight);
 
-            // Add name below image
-            ctx.font = '36px Georgia';
+            // Draw the name below the image
+            ctx.font = 'bold 36px Georgia';
             ctx.fillStyle = '#000';
             ctx.textAlign = 'center';
-            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 40);
+            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 50);
 
-            // Display and trigger download
+            // Make canvas visible for preview (optional)
+            canvas.style.display = 'block';
+
+            // Trigger download
             const link = document.createElement('a');
-            link.download = 'ascantia_participant.png';
+            link.download = 'CA_Ascentia_Poster.png';
             link.href = canvas.toDataURL();
             link.click();
           };
+
+          bgImg.src = 'Poster.jpg';  // Ensure this is correctly named and in the same folder
         };
-        userImg.src = e.target.result;
+        userImg.src = ev.target.result;
       };
-      reader.readAsDataURL(fileInput.files[0]);
+      userReader.readAsDataURL(fileInput.files[0]);
     }
   </script>
 </body>
