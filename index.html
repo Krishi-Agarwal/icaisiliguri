@@ -112,11 +112,11 @@
             canvas.height = bgImg.height;
             ctx.drawImage(bgImg, 0, 0);
 
-            // Adjust size and position of user image
+            // Image size and position
             const imgWidth = 500;
             const imgHeight = 600;
             const imgX = (bgImg.width - imgWidth) / 2;
-            const imgY = 780; // Just above the bottom text and centered over the tree
+            const imgY = 1100; // Moved significantly lower to avoid overlap
 
             ctx.save();
             ctx.beginPath();
