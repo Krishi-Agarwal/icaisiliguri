@@ -1,4 +1,4 @@
-https://github.com/Krishi-Agarwal/icaisiliguri.git<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -9,20 +9,29 @@ https://github.com/Krishi-Agarwal/icaisiliguri.git<!DOCTYPE html>
       margin: 0;
       padding: 0;
       background: url('poster.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background-size: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      font-family: sans-serif;
+      font-family: 'Georgia', serif;
+      color: #2c2c2c;
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px 40px;
+      border-radius: 12px;
       text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      font-weight: normal;
     }
 
     canvas {
@@ -32,10 +41,24 @@ https://github.com/Krishi-Agarwal/icaisiliguri.git<!DOCTYPE html>
 
     input, button {
       margin: 10px 0;
-      padding: 10px;
+      padding: 12px;
+      width: 100%;
       font-size: 16px;
-      border-radius: 5px;
+      border-radius: 6px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #2c2c2c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #444;
     }
   </style>
 </head>
@@ -45,7 +68,7 @@ https://github.com/Krishi-Agarwal/icaisiliguri.git<!DOCTYPE html>
     <input type="file" id="imageUpload" accept="image/*" /><br />
     <input type="text" id="userName" placeholder="Enter your name" /><br />
     <button onclick="generateImage()">Generate & Download</button>
-    <canvas id="canvas" width="800" height="600"></canvas>
+    <canvas id="canvas"></canvas>
   </div>
 
   <script>
@@ -66,14 +89,16 @@ https://github.com/Krishi-Agarwal/icaisiliguri.git<!DOCTYPE html>
         const userImg = new Image();
         userImg.onload = function() {
           const bgImg = new Image();
-          bgImg.src = 'poster.jpg'; // Must be in the same directory
+          bgImg.src = 'poster.jpg';
 
           bgImg.onload = function() {
-            ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-            ctx.drawImage(userImg, 300, 200, 200, 200); // adjust position/size
-            ctx.font = '30px Arial';
-            ctx.fillStyle = 'black';
-            ctx.fillText(nameInput, 320, 450);
+            canvas.width = bgImg.width;
+            canvas.height = bgImg.height;
+            ctx.drawImage(bgImg, 0, 0);
+            ctx.drawImage(userImg, bgImg.width / 2 - 100, bgImg.height / 2 - 100, 200, 200);
+            ctx.font = '32px Georgia';
+            ctx.fillStyle = '#222';
+            ctx.fillText(nameInput, bgImg.width / 2 - 70, bgImg.height / 2 + 130);
 
             const link = document.createElement('a');
             link.download = 'generated_image.png';
