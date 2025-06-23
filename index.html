@@ -9,7 +9,7 @@
       margin: 0;
       padding: 0;
       background: url('Poster.jpg') no-repeat center center fixed;
-      background-size: auto;
+      background-size: cover;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -77,7 +77,7 @@
 
     function generateImage() {
       const fileInput = document.getElementById('imageUpload');
-      const nameInput = document.getElementById('userName').value;
+      const nameInput = document.getElementById('userName').value.trim();
 
       if (!fileInput.files[0] || !nameInput) {
         alert('Please upload an image and enter your name.');
@@ -89,27 +89,34 @@
         const userImg = new Image();
         userImg.onload = function() {
           const bgImg = new Image();
-          bgImg.src = 'poster.jpg';
+          bgImg.src = 'Poster.jpg';
 
           bgImg.onload = function() {
             canvas.width = bgImg.width;
             canvas.height = bgImg.height;
             ctx.drawImage(bgImg, 0, 0);
 
-            const imgX = (bgImg.width - 200) / 2;
-            const imgY = (bgImg.height - 200) / 2 - 50;
-            ctx.drawImage(userImg, imgX, imgY, 400, 400);
+            // Define the area where the tree was and place the uploaded image
+            const imgWidth = 300;
+            const imgHeight = 300;
+            const imgX = (bgImg.width - imgWidth) / 2;
+            const imgY = bgImg.height * 0.55;
 
-            ctx.font = '32px Georgia';
-            ctx.fillStyle = '#222';
+            // Draw user's image
+            ctx.drawImage(userImg, imgX, imgY, imgWidth, imgHeight);
+
+            // Add name below image
+            ctx.font = '36px Georgia';
+            ctx.fillStyle = '#000';
             ctx.textAlign = 'center';
-            ctx.fillText(nameInput, bgImg.width / 2, imgY + 240);
+            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 40);
 
+            // Display and trigger download
             const link = document.createElement('a');
-            link.download = 'generated_image.png';
+            link.download = 'ascantia_participant.png';
             link.href = canvas.toDataURL();
             link.click();
-          }
+          };
         };
         userImg.src = e.target.result;
       };
