@@ -116,7 +116,7 @@
             const imgWidth = 500;
             const imgHeight = 600;
             const imgX = (bgImg.width - imgWidth) / 2;
-            const imgY = 1100; // Moved significantly lower to avoid overlap
+            const imgY = 1000; // Moved significantly lower to avoid overlap
 
             ctx.save();
             ctx.beginPath();
@@ -128,7 +128,7 @@
             ctx.restore();
 
             // Add name below image
-            ctx.font = 'bold 140px Georgia';
+            ctx.font = 'bold 140px Source Sans Pro';
             ctx.fillStyle = '#000';
             ctx.textAlign = 'center';
             ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 20);
