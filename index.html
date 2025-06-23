@@ -113,10 +113,10 @@
             ctx.drawImage(bgImg, 0, 0);
 
             // Image size and position
-            const imgWidth = 550;
-            const imgHeight = 700;
+            const imgWidth = 600;
+            const imgHeight = 850;
             const imgX = (bgImg.width - imgWidth) / 2;
-            const imgY = 1050; // Moved significantly lower to avoid overlap
+            const imgY = 1000; // Moved significantly lower to avoid overlap
 
             ctx.save();
             ctx.beginPath();
@@ -128,10 +128,10 @@
             ctx.restore();
 
             // Add name below image
-            ctx.font = 'bold 120px Source Sans Pro';
+            ctx.font = 'bold 140px Source Sans Pro';
             ctx.fillStyle = '#000';
             ctx.textAlign = 'center';
-            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 40);
+            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 45);
 
             // Download
             const link = document.createElement('a');
