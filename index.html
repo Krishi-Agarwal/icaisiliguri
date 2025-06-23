@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CA Ascentia Poster Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ascentia Poster Generator</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: #f5f5f5;
+      background: url('Poster.jpg') no-repeat center center fixed;
+      background-size: cover;
       font-family: 'Georgia', serif;
+      color: #2c2c2c;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -18,92 +20,122 @@
     }
 
     .container {
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
       padding: 30px 40px;
       border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
       text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       max-width: 400px;
+      width: 90%;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      font-weight: normal;
     }
 
     input, button {
-      margin-top: 10px;
+      margin: 10px 0;
       padding: 12px;
       width: 100%;
       font-size: 16px;
-      border: 1px solid #ccc;
       border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
     }
 
     button {
       background-color: #2c2c2c;
       color: white;
+      border: none;
       cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #444;
     }
 
     canvas {
+      display: none;
       margin-top: 20px;
-      max-width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      input, button {
+        font-size: 14px;
+        padding: 10px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Upload Your Image & Name</h2>
-    <input type="file" id="imageUpload" accept="image/*" />
-    <input type="text" id="userName" placeholder="Enter your name" />
+    <h2>Upload Your Image and Enter Name</h2>
+    <input type="file" id="imageUpload" accept="image/*" /><br />
+    <input type="text" id="userName" placeholder="Enter your name" /><br />
     <button onclick="generateImage()">Generate & Download</button>
     <canvas id="canvas"></canvas>
   </div>
 
   <script>
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
 
     function generateImage() {
-      const fileInput = document.getElementById("imageUpload");
-      const name = document.getElementById("userName").value;
+      const fileInput = document.getElementById('imageUpload');
+      const nameInput = document.getElementById('userName').value.trim();
 
-      if (!fileInput.files[0] || !name) {
-        alert("Please upload an image and enter your name.");
+      if (!fileInput.files[0] || !nameInput) {
+        alert('Please upload an image and enter your name.');
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = function (e) {
+      reader.onload = function(e) {
         const userImg = new Image();
-        userImg.onload = function () {
+        userImg.onload = function() {
           const bgImg = new Image();
-          bgImg.src = 'CA_Ascentia_Poster (1).png'; // Use exact filename
+          bgImg.src = 'Poster.jpg';
 
-          bgImg.onload = function () {
+          bgImg.onload = function() {
             canvas.width = bgImg.width;
             canvas.height = bgImg.height;
             ctx.drawImage(bgImg, 0, 0);
 
-            // Updated position and larger size
-            const size = 700; // Size of the circular image
-            const centerX = bgImg.width / 2;
-            const centerY = bgImg.height * 0.58;
+            // Adjust size and position of user image
+            const imgWidth = 500;
+            const imgHeight = 600;
+            const imgX = (bgImg.width - imgWidth) / 2;
+            const imgY = 780; // Just above the bottom text and centered over the tree
 
-            // Clip into circle and draw image
             ctx.save();
             ctx.beginPath();
-            ctx.arc(centerX, centerY, size / 2, 0, Math.PI * 2);
+            ctx.arc(imgX + imgWidth/2, imgY + imgHeight/2, Math.min(imgWidth, imgHeight) / 2, 0, Math.PI * 2, true);
             ctx.closePath();
             ctx.clip();
-            ctx.drawImage(userImg, centerX - size / 2, centerY - size / 2, size, size);
+
+            ctx.drawImage(userImg, imgX, imgY, imgWidth, imgHeight);
             ctx.restore();
 
-            // Draw name just below the image
-            ctx.font = "bold 42px Georgia";
-            ctx.fillStyle = "#000";
-            ctx.textAlign = "center";
-            ctx.fillText(name, centerX, centerY + size / 2 + 50);
+            // Add name below image
+            ctx.font = 'bold 40px Georgia';
+            ctx.fillStyle = '#000';
+            ctx.textAlign = 'center';
+            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 50);
 
             // Download
-            const link = document.createElement("a");
-            link.download = "ascentia_poster.png";
+            const link = document.createElement('a');
+            link.download = 'Ascentia_Poster.png';
             link.href = canvas.toDataURL();
             link.click();
           };
