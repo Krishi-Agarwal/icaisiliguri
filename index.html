@@ -116,7 +116,7 @@
             const imgWidth = 600;
             const imgHeight = 850;
             const imgX = (bgImg.width - imgWidth) / 2;
-            const imgY = 1000; // Moved significantly lower to avoid overlap
+            const imgY = 950; // Moved significantly lower to avoid overlap
 
             ctx.save();
             ctx.beginPath();
@@ -131,7 +131,7 @@
             ctx.font = 'bold 140px Source Sans Pro';
             ctx.fillStyle = '#000';
             ctx.textAlign = 'center';
-            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 45);
+            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 40);
 
             // Download
             const link = document.createElement('a');
