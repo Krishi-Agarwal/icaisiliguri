@@ -95,10 +95,15 @@
             canvas.width = bgImg.width;
             canvas.height = bgImg.height;
             ctx.drawImage(bgImg, 0, 0);
-            ctx.drawImage(userImg, bgImg.width / 2 - 100, bgImg.height / 2 - 100, 200, 200);
+
+            const imgX = (bgImg.width - 200) / 2;
+            const imgY = (bgImg.height - 200) / 2 - 50;
+            ctx.drawImage(userImg, imgX, imgY, 200, 200);
+
             ctx.font = '32px Georgia';
             ctx.fillStyle = '#222';
-            ctx.fillText(nameInput, bgImg.width / 2 - 70, bgImg.height / 2 + 130);
+            ctx.textAlign = 'center';
+            ctx.fillText(nameInput, bgImg.width / 2, imgY + 240);
 
             const link = document.createElement('a');
             link.download = 'generated_image.png';
