@@ -8,7 +8,7 @@
     body {
       margin: 0;
       padding: 0;
-      background: #f0f0f0;
+      background: #f5f5f5;
       font-family: 'Georgia', serif;
       display: flex;
       flex-direction: column;
@@ -18,106 +18,92 @@
     }
 
     .container {
-      background: #fff;
+      background: white;
       padding: 30px 40px;
       border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
       text-align: center;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       max-width: 400px;
     }
 
-    h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-
-    canvas {
-      display: block;
-      margin-top: 20px;
-      max-width: 100%;
-    }
-
     input, button {
-      margin: 10px 0;
+      margin-top: 10px;
       padding: 12px;
       width: 100%;
       font-size: 16px;
-      border-radius: 6px;
       border: 1px solid #ccc;
-      box-sizing: border-box;
+      border-radius: 6px;
     }
 
     button {
       background-color: #2c2c2c;
       color: white;
-      border: none;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
-    button:hover {
-      background-color: #444;
+    canvas {
+      margin-top: 20px;
+      max-width: 100%;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Upload Your Photo and Name</h2>
-    <input type="file" id="imageUpload" accept="image/*" /><br />
-    <input type="text" id="userName" placeholder="Enter your name" /><br />
+    <h2>Upload Your Image & Name</h2>
+    <input type="file" id="imageUpload" accept="image/*" />
+    <input type="text" id="userName" placeholder="Enter your name" />
     <button onclick="generateImage()">Generate & Download</button>
     <canvas id="canvas"></canvas>
   </div>
 
   <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
 
     function generateImage() {
-      const fileInput = document.getElementById('imageUpload');
-      const nameInput = document.getElementById('userName').value;
+      const fileInput = document.getElementById("imageUpload");
+      const name = document.getElementById("userName").value;
 
-      if (!fileInput.files[0] || !nameInput) {
-        alert('Please upload an image and enter your name.');
+      if (!fileInput.files[0] || !name) {
+        alert("Please upload an image and enter your name.");
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         const userImg = new Image();
-        userImg.onload = function() {
+        userImg.onload = function () {
           const bgImg = new Image();
-          bgImg.src = 'CA_Ascentia_Poster.png'; // Ensure this file is in same folder
+          bgImg.src = 'CA_Ascentia_Poster (1).png'; // Use exact filename
 
-          bgImg.onload = function() {
+          bgImg.onload = function () {
             canvas.width = bgImg.width;
             canvas.height = bgImg.height;
             ctx.drawImage(bgImg, 0, 0);
 
-            // Positioning and size
-            const imgWidth = 480;
-            const imgHeight = 480;
-            const imgX = (bgImg.width - imgWidth) / 2;
-            const imgY = bgImg.height * 0.48;
+            // Updated position and larger size
+            const size = 700; // Size of the circular image
+            const centerX = bgImg.width / 2;
+            const centerY = bgImg.height * 0.58;
 
-            // Draw circular photo
+            // Clip into circle and draw image
             ctx.save();
             ctx.beginPath();
-            ctx.arc(bgImg.width / 2, imgY + imgHeight / 2, imgWidth / 2, 0, Math.PI * 2, true);
+            ctx.arc(centerX, centerY, size / 2, 0, Math.PI * 2);
             ctx.closePath();
             ctx.clip();
-            ctx.drawImage(userImg, imgX, imgY, imgWidth, imgHeight);
+            ctx.drawImage(userImg, centerX - size / 2, centerY - size / 2, size, size);
             ctx.restore();
 
-            // Add name below the image
-            ctx.font = 'bold 40px Georgia';
-            ctx.fillStyle = '#000';
-            ctx.textAlign = 'center';
-            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 60);
+            // Draw name just below the image
+            ctx.font = "bold 42px Georgia";
+            ctx.fillStyle = "#000";
+            ctx.textAlign = "center";
+            ctx.fillText(name, centerX, centerY + size / 2 + 50);
 
             // Download
-            const link = document.createElement('a');
-            link.download = 'ascentia_attendee_poster.png';
+            const link = document.createElement("a");
+            link.download = "ascentia_poster.png";
             link.href = canvas.toDataURL();
             link.click();
           };
