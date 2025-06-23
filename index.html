@@ -2,23 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CA Poster Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CA Ascentia Poster Generator</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: #f2f2f2;
+      background: #f0f0f0;
+      font-family: 'Georgia', serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      font-family: 'Georgia', serif;
+      min-height: 100vh;
     }
 
     .container {
-      background: white;
+      background: #fff;
       padding: 30px 40px;
       border-radius: 12px;
       text-align: center;
@@ -26,9 +26,15 @@
       max-width: 400px;
     }
 
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
     canvas {
-      display: none;
+      display: block;
       margin-top: 20px;
+      max-width: 100%;
     }
 
     input, button {
@@ -38,6 +44,7 @@
       font-size: 16px;
       border-radius: 6px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
     }
 
     button {
@@ -45,6 +52,7 @@
       color: white;
       border: none;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
 
     button:hover {
@@ -54,7 +62,7 @@
 </head>
 <body>
   <div class="container">
-    <h2>Upload Your Image and Enter Name</h2>
+    <h2>Upload Your Photo and Name</h2>
     <input type="file" id="imageUpload" accept="image/*" /><br />
     <input type="text" id="userName" placeholder="Enter your name" /><br />
     <button onclick="generateImage()">Generate & Download</button>
@@ -67,56 +75,56 @@
 
     function generateImage() {
       const fileInput = document.getElementById('imageUpload');
-      const nameInput = document.getElementById('userName').value.trim();
+      const nameInput = document.getElementById('userName').value;
 
       if (!fileInput.files[0] || !nameInput) {
         alert('Please upload an image and enter your name.');
         return;
       }
 
-      const userReader = new FileReader();
-      userReader.onload = function(ev) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
         const userImg = new Image();
         userImg.onload = function() {
           const bgImg = new Image();
+          bgImg.src = 'CA_Ascentia_Poster.png'; // Ensure this file is in same folder
+
           bgImg.onload = function() {
-            // Set canvas size to match the poster
             canvas.width = bgImg.width;
             canvas.height = bgImg.height;
-
-            // Draw the poster background
             ctx.drawImage(bgImg, 0, 0);
 
-            // Position for user's image (adjust if needed)
-            const imgWidth = 300;
-            const imgHeight = 300;
+            // Positioning and size
+            const imgWidth = 480;
+            const imgHeight = 480;
             const imgX = (bgImg.width - imgWidth) / 2;
-            const imgY = bgImg.height * 0.52;
+            const imgY = bgImg.height * 0.48;
 
-            // Draw the uploaded photo
+            // Draw circular photo
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(bgImg.width / 2, imgY + imgHeight / 2, imgWidth / 2, 0, Math.PI * 2, true);
+            ctx.closePath();
+            ctx.clip();
             ctx.drawImage(userImg, imgX, imgY, imgWidth, imgHeight);
+            ctx.restore();
 
-            // Draw the name below the image
-            ctx.font = 'bold 36px Georgia';
+            // Add name below the image
+            ctx.font = 'bold 40px Georgia';
             ctx.fillStyle = '#000';
             ctx.textAlign = 'center';
-            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 50);
+            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 60);
 
-            // Make canvas visible for preview (optional)
-            canvas.style.display = 'block';
-
-            // Trigger download
+            // Download
             const link = document.createElement('a');
-            link.download = 'CA_Ascentia_Poster.png';
+            link.download = 'ascentia_attendee_poster.png';
             link.href = canvas.toDataURL();
             link.click();
           };
-
-          bgImg.src = 'Poster.jpg';  // Ensure this is correctly named and in the same folder
         };
-        userImg.src = ev.target.result;
+        userImg.src = e.target.result;
       };
-      userReader.readAsDataURL(fileInput.files[0]);
+      reader.readAsDataURL(fileInput.files[0]);
     }
   </script>
 </body>
