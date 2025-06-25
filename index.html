@@ -87,63 +87,78 @@
     <canvas id="canvas"></canvas>
   </div>
 
-  <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
 
-    function generateImage() {
-      const fileInput = document.getElementById('imageUpload');
-      const nameInput = document.getElementById('userName').value.trim();
+  function generateImage() {
+    const fileInput = document.getElementById('imageUpload');
+    const nameInput = document.getElementById('userName').value.trim();
 
-      if (!fileInput.files[0] || !nameInput) {
-        alert('Please upload an image and enter your name.');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const userImg = new Image();
-        userImg.onload = function() {
-          const bgImg = new Image();
-          bgImg.src = 'Poster.jpg';
-
-          bgImg.onload = function() {
-            canvas.width = bgImg.width;
-            canvas.height = bgImg.height;
-            ctx.drawImage(bgImg, 0, 0);
-
-            // Image size and position
-            const imgWidth = 600;
-            const imgHeight = 950;
-            const imgX = (bgImg.width - imgWidth) / 2;
-            const imgY = 800; // Moved significantly lower to avoid overlap
-
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(imgX + imgWidth/2, imgY + imgHeight/2, Math.min(imgWidth, imgHeight) / 2, 0, Math.PI * 2, true);
-            ctx.closePath();
-            ctx.clip();
-
-            ctx.drawImage(userImg, imgX, imgY, imgWidth, imgHeight);
-            ctx.restore();
-
-            // Add name below image
-            ctx.font = 'bold 140px Source Sans Pro';
-            ctx.fillStyle = '#000';
-            ctx.textAlign = 'center';
-            ctx.fillText(nameInput, bgImg.width / 2, imgY + imgHeight + 30);
-
-            // Download
-            const link = document.createElement('a');
-            link.download = 'Ascentia_Poster.png';
-            link.href = canvas.toDataURL();
-            link.click();
-          };
-        };
-        userImg.src = e.target.result;
-      };
-      reader.readAsDataURL(fileInput.files[0]);
+    if (!fileInput.files[0] || !nameInput) {
+      alert('Please upload an image and enter your name.');
+      return;
     }
-  </script>
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const userImg = new Image();
+      userImg.onload = function() {
+        const bgImg = new Image();
+        bgImg.src = 'Poster.jpg';
+
+        bgImg.onload = function() {
+          canvas.width = bgImg.width;
+          canvas.height = bgImg.height;
+          ctx.drawImage(bgImg, 0, 0);
+
+          // Set target position
+          const targetWidth = 600;
+          const targetHeight = 950;
+          const targetX = (bgImg.width - targetWidth) / 2;
+          const targetY = 800;
+
+          // Maintain aspect ratio
+          const aspectRatio = userImg.width / userImg.height;
+          let drawWidth = targetWidth;
+          let drawHeight = drawWidth / aspectRatio;
+
+          if (drawHeight > targetHeight) {
+            drawHeight = targetHeight;
+            drawWidth = drawHeight * aspectRatio;
+          }
+
+          const drawX = targetX + (targetWidth - drawWidth) / 2;
+          const drawY = targetY + (targetHeight - drawHeight) / 2;
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(targetX + targetWidth / 2, targetY + targetHeight / 2, Math.min(drawWidth, drawHeight) / 2, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+
+          ctx.drawImage(userImg, drawX, drawY, drawWidth, drawHeight);
+          ctx.restore();
+
+          // Add name text
+          ctx.font = '80px "Great Vibes", cursive';
+          ctx.fillStyle = '#000';
+          ctx.textAlign = 'center';
+          ctx.shadowColor = 'rgba(0,0,0,0.3)';
+          ctx.shadowBlur = 4;
+          ctx.fillText(nameInput, bgImg.width / 2, targetY + targetHeight + 100);
+
+          // Download
+          const link = document.createElement('a');
+          link.download = 'Ascentia_Poster.png';
+          link.href = canvas.toDataURL();
+          link.click();
+        };
+      };
+      userImg.src = e.target.result;
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  }
+</script>
 </body>
 </html>
