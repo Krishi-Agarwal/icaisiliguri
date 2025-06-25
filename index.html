@@ -116,7 +116,7 @@
           const targetWidth = 600;
           const targetHeight = 950;
           const targetX = (bgImg.width - targetWidth) / 2;
-          const targetY = 950;
+          const targetY = 900;
 
           // Maintain aspect ratio
           const aspectRatio = userImg.width / userImg.height;
@@ -146,7 +146,7 @@
           ctx.textAlign = 'center';
           ctx.shadowColor = 'rgba(0,0,0,0.3)';
           ctx.shadowBlur = 4;
-          ctx.fillText(nameInput, bgImg.width / 2, targetY + targetHeight + 10);
+          ctx.fillText(nameInput, bgImg.width / 2, targetY + targetHeight - 30);
 
           // Download
           const link = document.createElement('a');
